@@ -61,7 +61,10 @@ function App() {
     if (name === "n") {
       setN(parseInt(value));
     } else {
-      setOptions((old) => ({ ...old, [name]: parseInt(value) }));
+      setOptions((old) => ({
+        ...old,
+        [name]: name === "mutationRate" ? parseFloat(value) : parseInt(value),
+      }));
     }
   };
   const handleSolve: React.MouseEventHandler<HTMLButtonElement> = () => {
