@@ -45,6 +45,8 @@ function App() {
           type="number"
           id="n"
           name="n"
+          min={4}
+          max={20}
           value={n}
           onChange={handleChange}
         />

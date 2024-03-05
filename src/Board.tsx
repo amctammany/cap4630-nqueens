@@ -1,14 +1,14 @@
 import React from "react";
-import { genAlgo } from "./lib/genalg";
+import { decode, genAlgo } from "./lib/genalg";
 
-function Board({ src }: { src?: number[] }) {
+function Board({ src }: { src?: string }) {
   if (!src) return <div />;
   const n = src.length;
   const board = Array.from({ length: n }).map(() =>
     Array.from({ length: n }).map(() => "-")
   );
-  src.forEach((row, col) => {
-    board[col][row] = "Q";
+  src.split("").forEach((row, col) => {
+    board[col][decode(row)] = "Q";
   });
   return (
     <div className="board">
