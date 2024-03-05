@@ -3,7 +3,7 @@ export type GenAlgoOptions = Partial<{
   populationSize: number;
   timeout: number;
   mutationRate: number;
-  p: number;
+  mixingNumber: number;
 }>;
 type EntityType = string; //number[]
 type FitnessFunc = (entity: EntityType) => number;
@@ -33,6 +33,7 @@ const alphabet = Object.fromEntries(
 );
 export const encode = (n: number) => alphabet[n];
 export const decode = (letter: string) => letter.charCodeAt(0) - 97;
+const MIXING_NUMBER = 2;
 const CUTOFF_TIME = 50000;
 const MUTATE_PROBABILITY = 0.03;
 const POPULATION_SIZE = 200;
@@ -66,6 +67,7 @@ export function genAlgo(
   const cutoffTime = options?.timeout ?? CUTOFF_TIME;
   const mutateProbability = options?.mutationRate ?? MUTATE_PROBABILITY;
   const populationSize = options?.populationSize ?? POPULATION_SIZE;
+  const mixingNumber = options?.mixingNumber ?? MIXING_NUMBER;
   const startTime = Date.now();
   let generationCount = 0;
   let bestFound: EntityType | undefined = undefined;
@@ -76,8 +78,10 @@ export function genAlgo(
     const weights = assignWeights(population, fitness);
     const nextGen = [];
     for (let i = 0; i < population.length; i++) {
-      const [p1, p2] = weightedRandChoice(population, weights, 2);
-      let child = reproduce(p1, p2);
+      //const [p1, p2] = ;
+      let child = reproduce(
+        ...weightedRandChoice(population, weights, mixingNumber)
+      );
 
       if (Math.random() < mutateProbability) child = mutate(child);
       const score = fitness(child);
@@ -100,9 +104,24 @@ export function genAlgo(
   };
 }
 
-function reproduce(p1: EntityType, p2: EntityType) {
-  const n = p1.length;
-  const c = getRandomInt(n);
+function reproduce(...parents: EntityType[]) {
+  const n = parents[0].length;
+  return parents.reduce(
+    (acc, parent, index) => {
+      const c = getRandomInt(acc.rem);
+
+      //console.log(acc);
+      return {
+        str: acc.str.concat(
+          index === parents.length - 1
+            ? parent.slice(acc.index)
+            : parent.slice(acc.index, acc.index + c)
+        ),
+        index: acc.index + c,
+        rem: acc.rem - c,
+      };
+    },
+    { str: "", rem: n, index: 0 }
+  ).str;
   //return p1.slice(0, c).concat(p2.slice(c));
-  return `${p1.slice(0, c)}${p2.slice(c)}`;
 }

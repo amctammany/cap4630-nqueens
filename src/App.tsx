@@ -16,7 +16,7 @@ function App() {
     timeout: 60000,
     populationSize: 500,
     mutationRate: 0.03,
-    p: 2,
+    mixingNumber: 2,
   });
   const [result, setResult] = useState<Result>();
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -83,12 +83,12 @@ function App() {
         />
       </div>
       <div className="prop">
-        <label htmlFor="p">P</label>
+        <label htmlFor="mixingNumber">Mixing Number</label>
         <input
           type="number"
-          id="p"
-          name="p"
-          value={options.p}
+          id="mixingNumber"
+          name="mixingNumber"
+          value={options.mixingNumber}
           onChange={handleChange}
         />
       </div>
