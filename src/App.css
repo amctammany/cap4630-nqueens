@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+.board {
+  margin: auto;
+  border: 2px solid black;
+}
+.row {
+  display: flex;
+  text-align: center;
+}
+.row > div {
+  aspect-ratio: 1 / 1;
+  /*margin: auto;*/
+  /*width: 20px;*/
+  /*height: 20px;*/
+  flex-grow: 1;
+  display: grid;
+
+}
+.tile span {
+  margin: auto;
+}
