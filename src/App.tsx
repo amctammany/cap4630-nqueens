@@ -1,16 +1,44 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import { weightedRand, weightedRandChoice } from "./lib/utils";
-import {
-  findNonConflictingPairs,
-  genAlgo,
-  GenAlgoOptions,
-  generateInitialPopulation,
-} from "./lib/genalg";
+import { genAlgo, GenAlgoOptions } from "./lib/genalg";
 import ResultDisplay from "./ResultDisplay";
+type Props = {
+  color?: "black" | "white";
+  size?: number;
+  display?: "inline-block" | "block";
+};
 
+const Loader = ({
+  color = "black",
+  size = 200,
+  display = "inline-block",
+}: Props) => {
+  return (
+    <div
+      style={{
+        border: `4px solid ${color}`,
+        margin: "20px",
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRightColor: "transparent",
+        borderRadius: "50%",
+        display,
+        //margin: display === "block" ? "50px auto" : "none",
+      }}
+      className="loader"
+    ></div>
+  );
+};
 type Result = ReturnType<typeof genAlgo>;
 function App() {
+  const reser = useMemo(
+    () =>
+      new Worker(new URL("./app.worker.ts", import.meta.url), {
+        type: "module",
+      }),
+    []
+  );
+
   const [n, setN] = useState(8);
   const [options, setOptions] = useState<GenAlgoOptions>({
     timeout: 60000,
@@ -18,7 +46,16 @@ function App() {
     mutationRate: 0.03,
     mixingNumber: 2,
   });
-  const [result, setResult] = useState<Result>();
+  const [result, setResult] = useState<
+    { loading: boolean } & Partial<Result>
+  >();
+  useEffect(() => {
+    if (window.Worker) {
+      reser.onmessage = (e: MessageEvent<Result>) => {
+        setResult({ ...e.data, loading: false });
+      };
+    }
+  }, [reser]);
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.currentTarget;
     if (name === "n") {
@@ -26,13 +63,10 @@ function App() {
     } else {
       setOptions((old) => ({ ...old, [name]: parseInt(value) }));
     }
-    //if (name === "timeout") setTimer(parseInt(value));
   };
-  const handleSolve: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    //const initialPopulation = generateInitialPopulation(n, 100);
-    const res = genAlgo(n, findNonConflictingPairs, options);
-    console.log(res);
-    setResult(res);
+  const handleSolve: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setResult({ loading: true });
+    reser.postMessage({ n, ...options });
   };
 
   return (
@@ -92,8 +126,10 @@ function App() {
           onChange={handleChange}
         />
       </div>
-      <button onClick={handleSolve}>Solve</button>
-      <ResultDisplay {...result} />
+      <button disabled={result?.loading} onClick={handleSolve}>
+        Solve
+      </button>
+      <div>{result?.loading ? <Loader /> : <ResultDisplay {...result} />}</div>
     </>
   );
 }
