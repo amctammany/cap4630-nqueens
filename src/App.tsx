@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { weightedRand, weightedRandChoice } from "./lib/utils";
-import { findNonConflictingPairs } from "./lib/genalg";
+import { findNonConflictingPairs, genAlgo } from "./lib/genalg";
 
 function App() {
   const [n, setN] = useState(8);
@@ -23,7 +23,7 @@ function App() {
       [0.2, 0.4, 0.1, 0.4],
       2
     );
-    console.log(res);
+    console.log(genAlgo(["13562064", "53372062"], findNonConflictingPairs));
     //console.log(findNonConflictingPairs("24613578"));
 
     const solution = "13572064";
