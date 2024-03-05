@@ -1,4 +1,3 @@
-import React from "react";
 import { genAlgo } from "./lib/genalg";
 import Board from "./Board";
 

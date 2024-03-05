@@ -1,5 +1,4 @@
-import React from "react";
-import { decode, genAlgo } from "./lib/genalg";
+import { decode } from "./lib/genalg";
 
 function Board({ src }: { src?: string }) {
   if (!src) return <div />;
