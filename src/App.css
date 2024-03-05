@@ -60,3 +60,11 @@
 .tile span {
   margin: auto;
 }
+.prop {
+  display: grid;
+  margin: 8px;
+  gap: 8px;
+  text-align: left;
+  grid-template-columns: repeat(2, 50%)
+  /*border: 2px solid black;*/
+}

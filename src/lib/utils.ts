@@ -2,7 +2,7 @@ export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 export function weightedRandChoice(
-  population: string[],
+  population: number[][],
   weights: number[],
   select: number
 ) {
