@@ -37,14 +37,18 @@ const MIXING_NUMBER = 2;
 const CUTOFF_TIME = 50000;
 const MUTATE_PROBABILITY = 0.03;
 const POPULATION_SIZE = 200;
-function mutate(entity: EntityType) {
+function mutate(entity: EntityType, p: number) {
   const n = entity.length;
-  return entity
-    .split("")
-    .map((q) =>
-      Math.random() < MUTATE_PROBABILITY ? encode(getRandomInt(n)) : q
-    )
-    .join("");
+  const index = getRandomInt(n);
+  return Math.random() < p
+    ? entity.substring(0, index) +
+        encode(getRandomInt(n)) +
+        entity.substring(index + 1)
+    : entity;
+  //return entity
+  //.split("")
+  //.map((q) => (Math.random() < p ? encode(getRandomInt(n)) : q))
+  //.join("");
 }
 function createRandomOrganism(n: number) {
   return function () {
@@ -83,7 +87,8 @@ export function genAlgo(
         ...weightedRandChoice(population, weights, mixingNumber)
       );
 
-      if (Math.random() < mutateProbability) child = mutate(child);
+      if (Math.random() < mutateProbability)
+        child = mutate(child, mutateProbability);
       const score = fitness(child);
       if (score >= bestScore) {
         if (score > bestScore) {

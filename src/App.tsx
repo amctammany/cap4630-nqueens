@@ -41,9 +41,9 @@ function App() {
 
   const [n, setN] = useState(8);
   const [options, setOptions] = useState<GenAlgoOptions>({
-    timeout: 60000,
-    populationSize: 500,
-    mutationRate: 0.03,
+    timeout: 10000,
+    populationSize: 1000,
+    mutationRate: 0.3,
     mixingNumber: 2,
   });
   const [result, setResult] = useState<
