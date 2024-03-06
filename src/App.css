@@ -80,3 +80,7 @@
   grid-template-columns: repeat(2, 50%)
   /*border: 2px solid black;*/
 }
+.solutions {
+  /*display: grid;*/
+}
+/*.solutions > div{ display: block; }*/

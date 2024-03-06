@@ -70,7 +70,7 @@ export function genAlgo(
   const mixingNumber = options?.mixingNumber ?? MIXING_NUMBER;
   const startTime = Date.now();
   let generationCount = 0;
-  let bestFound: EntityType | undefined = undefined;
+  const bestFound: EntityType[] = [];
   let bestScore = 0;
   let population = generateInitialPopulation(n, populationSize);
   const maxScore = (population[0].length * (population[0].length - 1)) / 2;
@@ -85,9 +85,14 @@ export function genAlgo(
 
       if (Math.random() < mutateProbability) child = mutate(child);
       const score = fitness(child);
-      if (score > bestScore) {
-        bestFound = child;
-        bestScore = score;
+      if (score >= bestScore) {
+        if (score > bestScore) {
+          bestScore = score;
+          bestFound.splice(0, bestFound.length);
+          bestFound.push(child);
+        } else {
+          bestFound.push(child);
+        }
       }
       nextGen.push(child);
     }

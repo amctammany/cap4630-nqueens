@@ -22,6 +22,9 @@ function ResultDisplay(props: Partial<ReturnType<typeof genAlgo>>) {
       <div>
         <b>Optimal Solution Found: </b>
         <i>{optimalFound?.toString()}</i>
+        {!optimalFound && (
+          <span> ({bestFound.length} suboptimal solutions found)</span>
+        )}
       </div>
       <div>
         <b>Generations Used: </b>
@@ -32,7 +35,11 @@ function ResultDisplay(props: Partial<ReturnType<typeof genAlgo>>) {
         <b>Time Elapsed: </b>
         <i>{timeElapsed?.toString()} ms</i>
       </div>
-      <Board src={bestFound} />
+      <div className="solutions">
+        {bestFound.map((solution) => (
+          <Board key={solution} src={solution} />
+        ))}
+      </div>
     </div>
   );
 }
